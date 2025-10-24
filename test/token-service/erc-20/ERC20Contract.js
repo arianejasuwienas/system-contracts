@@ -1,10 +1,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
-import { network } from "hardhat";
-const { ethers } = await network.connect();
-import utils from '../utils.js';
-import Constants from '../../constants.js';
-import { expect } from "chai";
+const { expect } = require('chai');
+const { ethers } = require('hardhat');
+const utils = require('../utils');
+const Constants = require('../../constants');
 
 describe('ERC20Contract Test Suite', function () {
   let tokenCreateContract;
@@ -41,60 +40,60 @@ describe('ERC20Contract Test Suite', function () {
   });
 
   it('should be able to get token name', async function () {
-    const name = await erc20Contract['name(address)'](tokenAddress);
+    const name = await erc20Contract.name(tokenAddress);
     expect(name).to.equal(Constants.TOKEN_NAME);
   });
 
   it('should be able to get token symbol', async function () {
-    const symbol = await erc20Contract['symbol(address)'](tokenAddress);
+    const symbol = await erc20Contract.symbol(tokenAddress);
     expect(symbol).to.equal('tokenSymbol');
   });
 
   it('should be able to get token decimals', async function () {
-    const decimals = await erc20Contract['decimals(address)'](tokenAddress);
-    expect(decimals).to.equal(0n);
+    const decimals = await erc20Contract.decimals(tokenAddress);
+    expect(decimals).to.equal(0);
   });
 
   it('should be able to get token totalSupply', async function () {
-    const totalSupply = await erc20Contract['totalSupply(address)'](tokenAddress);
-    expect(Number(totalSupply)).to.equal(TOTAL_SUPPLY);
+    const totalSupply = await erc20Contract.totalSupply(tokenAddress);
+    expect(totalSupply).to.equal(TOTAL_SUPPLY);
   });
 
   it('should be able to get token balance of any account', async function () {
-    const contractOwnerBalance = await erc20Contract['balanceOf(address,address)'](
+    const contractOwnerBalance = await erc20Contract.balanceOf(
       tokenAddress,
       await tokenCreateContract.getAddress()
     );
-    const wallet1Balance = await erc20Contract['balanceOf(address,address)'](
+    const wallet1Balance = await erc20Contract.balanceOf(
       tokenAddress,
       signers[0].address
     );
-    const wallet2Balance = await erc20Contract['balanceOf(address,address)'](
+    const wallet2Balance = await erc20Contract.balanceOf(
       tokenAddress,
       signers[1].address
     );
 
     expect(contractOwnerBalance).to.exist;
-    expect(contractOwnerBalance).to.eq(0n);
+    expect(contractOwnerBalance).to.eq(0);
     expect(wallet1Balance).to.exist;
-    expect(Number(wallet1Balance)).to.eq(TOTAL_SUPPLY);
+    expect(wallet1Balance).to.eq(TOTAL_SUPPLY);
     expect(wallet2Balance).to.exist;
-    expect(wallet2Balance).to.eq(0n);
+    expect(wallet2Balance).to.eq(0);
   });
 
   it('should NOT be able to use transfer', async function () {
     const signers = await ethers.getSigners();
     const amount = 200;
 
-    const contractOwnerBalanceBefore = await erc20Contract['balanceOf(address,address)'](
+    const contractOwnerBalanceBefore = await erc20Contract.balanceOf(
       tokenAddress,
       await tokenCreateContract.getAddress()
     );
-    const wallet1BalanceBefore = await erc20Contract['balanceOf(address,address)'](
+    const wallet1BalanceBefore = await erc20Contract.balanceOf(
       tokenAddress,
       signers[0].address
     );
-    const wallet2BalanceBefore = await erc20Contract['balanceOf(address,address)'](
+    const wallet2BalanceBefore = await erc20Contract.balanceOf(
       tokenAddress,
       signers[1].address
     );
@@ -114,15 +113,15 @@ describe('ERC20Contract Test Suite', function () {
       expect(e.code).to.eq(Constants.CALL_EXCEPTION);
     }
 
-    const contractOwnerBalanceAfter = await erc20Contract['balanceOf(address,address)'](
+    const contractOwnerBalanceAfter = await erc20Contract.balanceOf(
       tokenAddress,
       await tokenCreateContract.getAddress()
     );
-    const wallet1BalanceAfter = await erc20Contract['balanceOf(address,address)'](
+    const wallet1BalanceAfter = await erc20Contract.balanceOf(
       tokenAddress,
       signers[0].address
     );
-    const wallet2BalanceAfter = await erc20Contract['balanceOf(address,address)'](
+    const wallet2BalanceAfter = await erc20Contract.balanceOf(
       tokenAddress,
       signers[1].address
     );
@@ -136,11 +135,11 @@ describe('ERC20Contract Test Suite', function () {
     const signers = await ethers.getSigners();
     const amount = 200;
 
-    const wallet1BalanceBefore = await erc20Contract['balanceOf(address,address)'](
+    const wallet1BalanceBefore = await erc20Contract.balanceOf(
       tokenAddress,
       signers[0].address
     );
-    const wallet2BalanceBefore = await erc20Contract['balanceOf(address,address)'](
+    const wallet2BalanceBefore = await erc20Contract.balanceOf(
       tokenAddress,
       signers[1].address
     );
@@ -160,11 +159,11 @@ describe('ERC20Contract Test Suite', function () {
       expect(e.code).to.eq(Constants.CALL_EXCEPTION);
     }
 
-    const wallet1BalanceAfter = await erc20Contract['balanceOf(address,address)'](
+    const wallet1BalanceAfter = await erc20Contract.balanceOf(
       tokenAddress,
       signers[0].address
     );
-    const wallet2BalanceAfter = await erc20Contract['balanceOf(address,address)'](
+    const wallet2BalanceAfter = await erc20Contract.balanceOf(
       tokenAddress,
       signers[1].address
     );
@@ -177,12 +176,12 @@ describe('ERC20Contract Test Suite', function () {
     const signers = await ethers.getSigners();
     const approvedAmount = 200;
 
-    const allowanceBefore = await erc20Contract['allowance(address,address,address)'](
+    const allowanceBefore = await erc20Contract.allowance(
       tokenAddress,
       signers[0].address,
       signers[1].address
     );
-    expect(allowanceBefore).to.eq(0n);
+    expect(allowanceBefore).to.eq(0);
 
     try {
       const tx = await erc20Contract
@@ -199,24 +198,24 @@ describe('ERC20Contract Test Suite', function () {
       expect(e.code).to.eq(Constants.CALL_EXCEPTION);
     }
 
-    const allowanceAfter = await erc20Contract['allowance(address,address,address)'](
+    const allowanceAfter = await erc20Contract.allowance(
       tokenAddress,
       signers[0].address,
       signers[1].address
     );
-    expect(allowanceAfter).to.eq(0n);
+    expect(allowanceAfter).to.eq(0);
   });
 
   it('should NOT be able to use delegateApprove and allowance', async function () {
     const signers = await ethers.getSigners();
     const approvedAmount = 200;
 
-    const allowanceBefore = await erc20Contract['allowance(address,address,address)'](
+    const allowanceBefore = await erc20Contract.allowance(
       tokenAddress,
       signers[0].address,
       signers[1].address
     );
-    expect(allowanceBefore).to.eq(0n);
+    expect(allowanceBefore).to.eq(0);
 
     try {
       const tx = await erc20Contract
@@ -233,7 +232,7 @@ describe('ERC20Contract Test Suite', function () {
       expect(e.code).to.eq(Constants.CALL_EXCEPTION);
     }
 
-    const allowanceAfter = await erc20Contract['allowance(address,address,address)'](
+    const allowanceAfter = await erc20Contract.allowance(
       tokenAddress,
       signers[0].address,
       signers[1].address
@@ -245,15 +244,15 @@ describe('ERC20Contract Test Suite', function () {
     const signers = await ethers.getSigners();
     const amount = 50;
 
-    const wallet1BalanceBefore = await erc20Contract['balanceOf(address,address)'](
+    const wallet1BalanceBefore = await erc20Contract.balanceOf(
       tokenAddress,
       signers[0].address
     );
-    const wallet2BalanceBefore = await erc20Contract['balanceOf(address,address)'](
+    const wallet2BalanceBefore = await erc20Contract.balanceOf(
       tokenAddress,
       signers[1].address
     );
-    const allowanceBefore = await erc20Contract['allowance(address,address,address)'](
+    const allowanceBefore = await erc20Contract.allowance(
       tokenAddress,
       signers[0].address,
       signers[1].address
@@ -275,15 +274,15 @@ describe('ERC20Contract Test Suite', function () {
       expect(e.code).to.eq(Constants.CALL_EXCEPTION);
     }
 
-    const wallet1BalanceAfter = await erc20Contract['balanceOf(address,address)'](
+    const wallet1BalanceAfter = await erc20Contract.balanceOf(
       tokenAddress,
       signers[0].address
     );
-    const wallet2BalanceAfter = await erc20Contract['balanceOf(address,address)'](
+    const wallet2BalanceAfter = await erc20Contract.balanceOf(
       tokenAddress,
       signers[1].address
     );
-    const allowanceAfter = await erc20Contract['allowance(address,address,address)'](
+    const allowanceAfter = await erc20Contract.allowance(
       tokenAddress,
       signers[0].address,
       signers[1].address

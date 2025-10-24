@@ -1,8 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
 
-import { network } from "hardhat";
-const { ethers } = await network.connect();
-
 const Events = {
   Success: 'success',
   ResponseCode: 'ResponseCode',
@@ -59,6 +56,9 @@ const Path = {
 
 const Contract = {
   ERC20Mock: 'ERC20Mock',
+  ERC20ProxyMock: 'ERC20ProxyMock',
+  ERC721Mock: 'ERC721Mock',
+  ERC721ProxyMock: 'ERC721ProxyMock',
   OZERC20Mock: 'OZERC20Mock',
   OZERC721Mock: 'OZERC721Mock',
   TokenCreateContract: 'TokenCreateContract',
@@ -89,6 +89,7 @@ const Contract = {
   ERC20CappedMock: 'ERC20CappedMock',
   ERC20PausableMock: 'ERC20PausableMock',
   HRC719Contract: 'HRC719Contract',
+  ExchangeRateMock: 'ExchangeRateMock',
   PrngSystemContract: 'PrngSystemContract',
   Concatenation: 'Concatenation',
   Transaction: 'Transaction',
@@ -209,8 +210,7 @@ const TOKEN_NAME = 'tokenName';
 const TOKEN_SYMBOL = 'tokenSymbol';
 const TOKEN_URL = 'tokenUrl';
 const TX_SUCCESS_CODE = 22;
-const WEI = 1;
-const SECOND = WEI;
+const SECOND = (WEI = 1);
 const MINUTE = 60 * SECOND;
 const HOUR = 60 * MINUTE;
 const DAY = 24 * HOUR;
@@ -219,7 +219,7 @@ const GWEI = 1e9;
 const HTS_SYSTEM_CONTRACT_ID = '0.0.359';
 const HAS_SYSTEM_CONTRACT_ID = '0.0.362';
 
-const Constants = {
+module.exports = {
   Events,
   Path,
   Contract,
@@ -245,6 +245,5 @@ const Constants = {
   GWEI,
   HTS_SYSTEM_CONTRACT_ID,
   HAS_SYSTEM_CONTRACT_ID,
+  ONE_HBAR,
 };
-
-export default Constants;

@@ -1,14 +1,13 @@
 // SPDX-License-Identifier: Apache-2.0
 
-import { expect } from "chai";
-import { network } from "hardhat";
-const { ethers } = await network.connect();
-import utils from '../utils.js';
-import Constants from '../../constants.js';
-import {
+const { expect } = require('chai');
+const { ethers } = require('hardhat');
+const utils = require('../utils');
+const Constants = require('../../constants');
+const {
   pollForNewBalance,
   pollForNewSignerBalance,
-} from '../../helpers.js';
+} = require('../../helpers');
 
 describe('IERC20 Test Suite', function () {
   let tokenCreateContract;
@@ -59,7 +58,7 @@ describe('IERC20 Test Suite', function () {
 
   it('should be able to get token decimals', async function () {
     const decimals = await IERC20.decimals();
-    expect(decimals).to.equal(0n);
+    expect(decimals).to.equal(0);
   });
 
   it('should be able to get token totalSupply', async function () {
@@ -75,25 +74,29 @@ describe('IERC20 Test Suite', function () {
     const signer1Balance = await IERC20.balanceOf(signers[1].address);
 
     expect(contractOwnerBalance).to.exist;
-    expect(contractOwnerBalance).to.eq(0n);
+    expect(contractOwnerBalance).to.eq(0);
     expect(signer0Balance).to.exist;
     expect(signer0Balance).to.eq(TOTAL_SUPPLY);
     expect(signer1Balance).to.exist;
-    expect(signer1Balance).to.eq(0n);
+    expect(signer1Balance).to.eq(0);
   });
 
   it('should be able to approve another account', async function () {
-    const signer1AllowanceBefore = await IERC20['allowance(address,address)'](
+    const signer1AllowanceBefore = await IERC20.allowance(
       signers[0].address,
       signers[1].address
     );
-    await IERC20['approve(address,uint256)'](signers[1].address, AMOUNT);
-    const signer1AllowanceAfter = await IERC20['allowance(address,address)'](
+    await IERC20.approve(
+      signers[1].address,
+      AMOUNT,
+      Constants.GAS_LIMIT_800000
+    );
+    const signer1AllowanceAfter = await IERC20.allowance(
       signers[0].address,
       signers[1].address
     );
 
-    expect(signer1AllowanceBefore).to.eq(0n);
+    expect(signer1AllowanceBefore).to.eq(0);
     expect(signer1AllowanceAfter).to.eq(AMOUNT);
   });
 
@@ -120,12 +123,17 @@ describe('IERC20 Test Suite', function () {
     const signer0BalanceBefore = await IERC20.balanceOf(signers[0].address);
     const signer1BalanceBefore = await IERC20.balanceOf(signers[1].address);
 
-    await IERC20['approve(address,uint256)'](signers[1].address, AMOUNT);
+    await IERC20.approve(
+      signers[1].address,
+      AMOUNT,
+      Constants.GAS_LIMIT_800000
+    );
     const IERC20Signer1 = await IERC20.connect(signers[1]);
     await IERC20Signer1.transferFrom(
       signers[0].address,
       await tokenCreateContract.getAddress(),
-      AMOUNT
+      AMOUNT,
+      Constants.GAS_LIMIT_800000
     );
 
     const tokenCreateBalanceAfter = await pollForNewBalance(

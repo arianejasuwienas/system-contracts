@@ -1,12 +1,11 @@
 // SPDX-License-Identifier: Apache-2.0
 
-import { network } from "hardhat";
-const { ethers } = await network.connect();
-import utils from '../utils.js';
-import Constants from '../../constants.js';
-import { expect } from "chai";
+const { expect } = require('chai');
+const { ethers } = require('hardhat');
+const utils = require('../utils');
+const Constants = require('../../constants');
 
-describe('ERC721Mock.sol Test Suite', function () {
+describe.only('ERC721Contract Test Suite', function () {
   let tokenCreateContract;
   let tokenTransferContract;
   let tokenAddress;
@@ -79,7 +78,7 @@ describe('ERC721Mock.sol Test Suite', function () {
 
   it('should be able to get token totalSupply', async function () {
     const totalSupply = await erc721Contract.totalSupply(tokenAddress);
-    expect(totalSupply).to.equal(1n);
+    expect(totalSupply).to.equal(1);
   });
 
   it('should be able to get token uri via tokenURI', async function () {
@@ -103,7 +102,7 @@ describe('ERC721Mock.sol Test Suite', function () {
       tokenAddress,
       nftInitialOwnerAddress
     );
-    expect(balance).to.equal(1n);
+    expect(balance).to.equal(1);
   });
 
   it('should be able to execute getApproved', async function () {
@@ -289,7 +288,7 @@ describe('ERC721Mock.sol Test Suite', function () {
       );
     });
 
-    it.skip('should NOT be able execute safeTransferFrom', async function () {
+    it('should NOT be able execute safeTransferFrom', async function () {
       const tx = erc721Contract.safeTransferFrom(
         tokenAddress,
         firstWallet.address,
@@ -297,10 +296,10 @@ describe('ERC721Mock.sol Test Suite', function () {
         mintedTokenSerialNumber,
         Constants.GAS_LIMIT_1_000_000
       );
-      if (tx) await utils.expectToFail(tx, Constants.CALL_EXCEPTION);
+      await utils.expectToFail(tx, Constants.CALL_EXCEPTION);
     });
 
-    it.skip('should NOT be able execute safeTransferFromWithData', async function () {
+    it('should NOT be able execute safeTransferFromWithData', async function () {
       const tx = erc721Contract.safeTransferFromWithData(
         tokenAddress,
         firstWallet.address,
@@ -309,7 +308,7 @@ describe('ERC721Mock.sol Test Suite', function () {
         '0x01',
         Constants.GAS_LIMIT_1_000_000
       );
-      if (tx) await utils.expectToFail(tx, Constants.CALL_EXCEPTION);
+      await utils.expectToFail(tx, Constants.CALL_EXCEPTION);
     });
   });
 });

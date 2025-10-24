@@ -1,17 +1,16 @@
 // SPDX-License-Identifier: Apache-2.0
 
-import { network } from "hardhat";
-const { ethers } = await network.connect();
-import utils from '../utils.js';
-import Constants from '../../constants.js';
-import {
+const { expect } = require('chai');
+const { ethers } = require('hardhat');
+const utils = require('../utils');
+const Constants = require('../../constants');
+const {
   pollForNewERC20Balance,
   pollForNewSignerBalanceUsingProvider,
-} from '../../helpers.js';
-import { expect } from "chai";
+} = require('../../helpers');
 
 describe('TokenTransferContract Test Suite', function () {
-  const TX_SUCCESS_CODE = 22n;
+  const TX_SUCCESS_CODE = 22;
 
   let tokenCreateContract;
   let tokenTransferContract;
@@ -38,7 +37,7 @@ describe('TokenTransferContract Test Suite', function () {
     tokenAddress = await utils.createFungibleTokenWithSECP256K1AdminKey(
       tokenCreateContract,
       signers[0].address,
-      await utils.getSignerCompressedPublicKey()
+      utils.getSignerCompressedPublicKey()
     );
     await utils.updateTokenKeysViaHapi(tokenAddress, [
       await tokenCreateContract.getAddress(),
@@ -48,7 +47,7 @@ describe('TokenTransferContract Test Suite', function () {
     nftTokenAddress = await utils.createNonFungibleTokenWithSECP256K1AdminKey(
       tokenCreateContract,
       signers[0].address,
-      await utils.getSignerCompressedPublicKey()
+      utils.getSignerCompressedPublicKey()
     );
     await utils.updateTokenKeysViaHapi(nftTokenAddress, [
       await tokenCreateContract.getAddress(),
@@ -109,15 +108,15 @@ describe('TokenTransferContract Test Suite', function () {
     }
   });
 
-  it.skip('should be able to execute transferTokens', async function () {
+  it('should be able to execute transferTokens', async function () {
     const amount = BigInt(33);
     const signers = await ethers.getSigners();
 
-    let wallet1BalanceBefore = await erc20Contract['balanceOf(address,address)'](
+    let wallet1BalanceBefore = await erc20Contract.balanceOf(
       tokenAddress,
       signers[0].address
     );
-    let wallet2BalanceBefore = await erc20Contract['balanceOf(address,address)'](
+    let wallet2BalanceBefore = await erc20Contract.balanceOf(
       tokenAddress,
       signers[1].address
     );
@@ -175,10 +174,10 @@ describe('TokenTransferContract Test Suite', function () {
     const signers = await ethers.getSigners();
 
     let wallet1BalanceBefore = parseInt(
-      await erc20Contract['balanceOf(address,address)'](tokenAddress, signers[0].address)
+      await erc20Contract.balanceOf(tokenAddress, signers[0].address)
     );
     let wallet2BalanceBefore = parseInt(
-      await erc20Contract['balanceOf(address,address)'](tokenAddress, signers[1].address)
+      await erc20Contract.balanceOf(tokenAddress, signers[1].address)
     );
     const tx = await tokenTransferContract.transferTokenPublic(
       tokenAddress,
@@ -203,8 +202,8 @@ describe('TokenTransferContract Test Suite', function () {
       wallet1BalanceBefore
     );
 
-    expect(Number(wallet1BalanceAfter)).to.equal(wallet1BalanceBefore - amount);
-    expect(Number(wallet2BalanceAfter)).to.equal(wallet2BalanceBefore + amount);
+    expect(wallet1BalanceAfter).to.equal(wallet1BalanceBefore - amount);
+    expect(wallet2BalanceAfter).to.equal(wallet2BalanceBefore + amount);
   });
 
   it('should be able to execute transferNFT', async function () {
@@ -386,10 +385,10 @@ describe('TokenTransferContract Test Suite', function () {
       signers[1].address
     );
     const signers0BeforeTokenBalance = parseInt(
-      await erc20Contract['balanceOf(address,address)'](tokenAddress, signers[0].address)
+      await erc20Contract.balanceOf(tokenAddress, signers[0].address)
     );
     const signers1BeforeTokenBalance = parseInt(
-      await erc20Contract['balanceOf(address,address)'](tokenAddress, signers[1].address)
+      await erc20Contract.balanceOf(tokenAddress, signers[1].address)
     );
     const nftOwnerBefore = await erc721Contract.ownerOf(
       nftTokenAddress,
@@ -459,11 +458,11 @@ describe('TokenTransferContract Test Suite', function () {
     const signers1AfterHbarBalance = await signers[0].provider.getBalance(
       signers[1].address
     );
-    const signers0AfterTokenBalance = await erc20Contract['balanceOf(address,address)'](
+    const signers0AfterTokenBalance = await erc20Contract.balanceOf(
       tokenAddress,
       signers[0].address
     );
-    const signers1AfterTokenBalance = await erc20Contract['balanceOf(address,address)'](
+    const signers1AfterTokenBalance = await erc20Contract.balanceOf(
       tokenAddress,
       signers[1].address
     );
@@ -476,7 +475,7 @@ describe('TokenTransferContract Test Suite', function () {
     expect(signers0BeforeHbarBalance > signers0AfterHbarBalance).to.equal(true);
     expect(signers1AfterHbarBalance > signers1BeforeHbarBalance).to.equal(true);
     expect(signers0BeforeTokenBalance - amount).to.equal(
-      BigInt(signers0AfterTokenBalance)
+      signers0AfterTokenBalance
     );
     expect(signers1BeforeTokenBalance + amount).to.equal(
       signers1AfterTokenBalance

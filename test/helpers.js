@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
-import dotenv from 'dotenv';
-import Constants from './constants.js';
-dotenv.config();
+require('dotenv').config();
+const Constants = require('../test/constants');
 
 const delay = (ms) => {
   return new Promise((resolve) =>
@@ -11,7 +10,7 @@ const delay = (ms) => {
 };
 
 const getBalance = async (erc20Contract, tokenAddress, signersAddress) => {
-  const balance = await erc20Contract['balanceOf(address,address)'](tokenAddress, signersAddress);
+  const balance = await erc20Contract.balanceOf(tokenAddress, signersAddress);
   return balance;
 };
 
@@ -420,7 +419,7 @@ const genericPoll = async (toPollFromPromise, comparator, ms, forOperation) => {
   `);
 };
 
-export {
+module.exports = {
   delay,
   pauseAndPoll,
   pollForNewERC20Balance,

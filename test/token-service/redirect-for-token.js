@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
-import utils from './utils.js';
-import Constants from '../constants.js';
-import hre, { network } from "hardhat";
-const { ethers } = await network.connect();
-import { expect } from "chai";
+const { expect } = require('chai');
+const utils = require('./utils');
+const Constants = require('../constants');
+const hre = require('hardhat');
+const { ethers } = hre;
 
 describe('RedirectForToken Test Suite', function () {
   const amount = 33;
@@ -39,8 +39,9 @@ describe('RedirectForToken Test Suite', function () {
     const tokenCreateFactory = await ethers.getContractFactory(
       Constants.Contract.TokenCreateContract
     );
-    const tokenCreateTx = await tokenCreateFactory.deploy();
-    await tokenCreateTx.waitForDeployment();
+    const tokenCreateTx = await tokenCreateFactory.deploy(
+      Constants.GAS_LIMIT_1_000_000
+    );
     tokenCreateContract = await ethers.getContractAt(
       Constants.Contract.TokenCreateContract,
       await tokenCreateTx.getAddress()
@@ -53,18 +54,15 @@ describe('RedirectForToken Test Suite', function () {
     const tokenAddressTx =
       await tokenCreateContract.createFungibleTokenWithSECP256K1AdminKeyPublic(
         signers[0].address,
-        await utils.getSignerCompressedPublicKey(),
+        utils.getSignerCompressedPublicKey(),
         {
-          value: '100000000000000000000',
-          gasLimit: 15000000n,
-          gasPrice: 700000n * 710000000000n
+          value: '10000000000000000000',
+          gasLimit: 1_000_000,
         }
       );
-    const logs = (await tokenAddressTx.wait(1, 100000));
-    tokenAddress = logs.logs.filter(
+    tokenAddress = (await tokenAddressTx.wait()).logs.filter(
       (e) => e.fragment.name === Constants.Events.CreatedToken
     )[0].args.tokenAddress;
-
 
     await utils.updateTokenKeysViaHapi(tokenAddress, [
       await tokenCreateContract.getAddress(),
@@ -78,7 +76,7 @@ describe('RedirectForToken Test Suite', function () {
     await utils.grantTokenKyc(tokenCreateContract, tokenAddress);
 
     IERC20 = new ethers.Interface(
-      (await hre.artifacts.readArtifact('ERC20Mock')).abi
+      (await hre.artifacts.readArtifact('ERC20')).abi
     );
   });
 
@@ -112,7 +110,7 @@ describe('RedirectForToken Test Suite', function () {
     );
     const [success, result] = await parseCallResponseEventData(tx);
     expect(success).to.eq(true);
-    expect(Number(result)).to.eq(0);
+    expect(Number(result)).to.eq(8);
   });
 
   it('should be able to execute totalSupply()', async function () {
@@ -123,7 +121,7 @@ describe('RedirectForToken Test Suite', function () {
     );
     const [success, result] = await parseCallResponseEventData(tx);
     expect(success).to.eq(true);
-    expect(Number(result)).to.eq(10000000000);
+    expect(Number(result)).to.eq(1000);
   });
 
   it('should be able to execute balanceOf(address)', async function () {
@@ -136,7 +134,7 @@ describe('RedirectForToken Test Suite', function () {
     );
     const [success0, result0] = await parseCallResponseEventData(tx0);
     expect(success0).to.eq(true);
-    expect(Number(result0)).to.eq(10000000000);
+    expect(Number(result0)).to.eq(1000);
 
     const encodedFuncSigner1 = IERC20.encodeFunctionData('balanceOf(address)', [
       signers[1].address,
@@ -181,7 +179,7 @@ describe('RedirectForToken Test Suite', function () {
 
   it('should be able to execute transfer(address,uint256)', async function () {
     const erc20 = await ethers.getContractAt(
-      Constants.Contract.ERC20Mock,
+      Constants.Contract.OZERC20Mock,
       tokenAddress
     );
     await (
@@ -208,17 +206,17 @@ describe('RedirectForToken Test Suite', function () {
 
   it('should be able to execute transferFrom(address,address,uint256)', async function () {
     const erc20 = await ethers.getContractAt(
-      Constants.Contract.ERC20Mock,
+      Constants.Contract.OZERC20Mock,
       tokenAddress
     );
     await (
       await erc20.transfer(await tokenCreateContract.getAddress(), amount)
     ).wait();
 
-    const tokenCreateContractBefore = await erc20['balanceOf(address)'](
+    const tokenCreateContractBefore = await erc20.balanceOf(
       await tokenCreateContract.getAddress()
     );
-    const balanceBefore = await erc20['balanceOf(address)'](signers[1].address);
+    const balanceBefore = await erc20.balanceOf(signers[1].address);
 
     await (
       await tokenCreateContract.approvePublic(
@@ -241,15 +239,15 @@ describe('RedirectForToken Test Suite', function () {
     const [success] = await parseCallResponseEventData(tx);
     expect(success).to.eq(true);
 
-    const tokenCreateContractAfter = await erc20['balanceOf(address)'](
+    const tokenCreateContractAfter = await erc20.balanceOf(
       await tokenCreateContract.getAddress()
     );
 
-    const balanceAfter = await erc20['balanceOf(address)'](signers[1].address);
+    const balanceAfter = await erc20.balanceOf(signers[1].address);
     expect(balanceBefore).to.not.eq(balanceAfter);
     expect(tokenCreateContractAfter).to.eq(
       tokenCreateContractBefore - BigInt(amount)
     );
-    expect(Number(balanceAfter)).to.eq(parseInt(balanceBefore) + parseInt(amount));
+    expect(balanceAfter).to.eq(parseInt(balanceBefore) + parseInt(amount));
   });
 });

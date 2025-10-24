@@ -1,21 +1,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
-import hre, { network } from "hardhat";
-const { ethers } = await network.connect();
-import utils from '../utils.js';
-import Constants from '../../constants.js';
-import Utils from '../utils.js';
-import { expect } from "chai";
-
-const expectToBeRejectedWith = async (promise, message) => {
-  let errorMessage = '';
-  try {
-    await promise();
-  } catch (e) {
-    errorMessage = e.message;
-  }
-  expect(errorMessage).to.contain(message);
-};
+const { expect } = require('chai');
+const { ethers } = require('hardhat');
+const utils = require('../utils');
+const Constants = require('../../constants');
+const Utils = require("../utils");
 
 describe('HIP904Batch3 ClaimAirdropContract Test Suite', function () {
   let airdropContract;
@@ -28,7 +17,6 @@ describe('HIP904Batch3 ClaimAirdropContract Test Suite', function () {
   let receiver;
   let receiverPrivateKey;
   let contractAddresses;
-  let tokenAddress;
 
   before(async function () {
     signers = await ethers.getSigners();
@@ -49,7 +37,7 @@ describe('HIP904Batch3 ClaimAirdropContract Test Suite', function () {
       Constants.Contract.TokenCreateContract
     );
     erc20Contract = await utils.deployContract(
-      Constants.Contract.ERC20Mock
+      Constants.Contract.ERC20Contract
     );
     erc721Contract = await utils.deployContract(
       Constants.Contract.ERC721Contract
@@ -101,7 +89,7 @@ describe('HIP904Batch3 ClaimAirdropContract Test Suite', function () {
       contractAddresses
     );
 
-    const initialBalance = await erc20Contract['balanceOf(address,address)'](
+    const initialBalance = await erc20Contract.balanceOf(
       tokenAddress,
       receiver.address
     );
@@ -127,7 +115,7 @@ describe('HIP904Batch3 ClaimAirdropContract Test Suite', function () {
     );
     await claimTx.wait();
 
-    const updatedBalance = await erc20Contract['balanceOf(address,address)'](
+    const updatedBalance = await erc20Contract.balanceOf(
       tokenAddress,
       receiver.address
     );
@@ -186,7 +174,7 @@ describe('HIP904Batch3 ClaimAirdropContract Test Suite', function () {
       );
 
     const initialBalances = await Promise.all(
-      tokens.map((token) => erc20Contract['balanceOf(address,address)'](token, receiver.address))
+      tokens.map((token) => erc20Contract.balanceOf(token, receiver.address))
     );
 
     for (let token of tokens) {
@@ -203,7 +191,7 @@ describe('HIP904Batch3 ClaimAirdropContract Test Suite', function () {
     await claimTx.wait();
 
     for (let i = 0; i < tokens.length; i++) {
-      const updatedBalance = await erc20Contract['balanceOf(address,address)'](
+      const updatedBalance = await erc20Contract.balanceOf(
         tokens[i],
         receiver.address
       );
@@ -366,39 +354,40 @@ describe('HIP904Batch3 ClaimAirdropContract Test Suite', function () {
     const receiverTemp = signers[1].address;
 
     const nftTokenAddress = await utils.setupNft(
-        tokenCreateContract,
-        owner,
-        contractAddresses
+      tokenCreateContract,
+      owner,
+      contractAddresses
     );
 
     const serialNumber = await utils.mintNFTToAddress(
-        tokenCreateContract,
-        nftTokenAddress
+      tokenCreateContract,
+      nftTokenAddress
     );
 
     const airdropTx = await airdropContract.nftAirdrop(
-        nftTokenAddress,
-        sender,
-        receiverTemp,
-        serialNumber,
-        {
-          value: Constants.ONE_HBAR,
-          ...Constants.GAS_LIMIT_2_000_000
-        }
+      nftTokenAddress,
+      sender,
+      receiverTemp,
+      serialNumber,
+      {
+        value: Constants.ONE_HBAR,
+        ...Constants.GAS_LIMIT_2_000_000
+      }
     );
     await airdropTx.wait();
 
     const airdropTx2 = await airdropContract.nftAirdrop(
-        nftTokenAddress,
-        sender,
-        receiverTemp,
-        serialNumber,
-        {
-          value: Constants.ONE_HBAR,
-          ...Constants.GAS_LIMIT_2_000_000
-        }
+      nftTokenAddress,
+      sender,
+      receiverTemp,
+      serialNumber,
+      {
+        value: Constants.ONE_HBAR,
+        ...Constants.GAS_LIMIT_2_000_000
+      }
     );
-    await expectToBeRejectedWith(() => airdropTx2.wait(), 'transaction execution reverted');
+
+    await expect(airdropTx2.wait()).to.be.rejectedWith('transaction execution reverted');
     expect(await Utils.getHTSResponseCode(airdropTx2.hash)).to.equal('237'); // SENDER_DOES_NOT_OWN_NFT_SERIAL_NO
   });
 
@@ -407,66 +396,68 @@ describe('HIP904Batch3 ClaimAirdropContract Test Suite', function () {
     const receiverTemp = receiver;
 
     const nftTokenAddress = await utils.setupNft(
-        tokenCreateContract,
-        owner,
-        contractAddresses
+      tokenCreateContract,
+      owner,
+      contractAddresses
     );
 
     const serialNumber = await utils.mintNFTToAddress(
-        tokenCreateContract,
-        nftTokenAddress
+      tokenCreateContract,
+      nftTokenAddress
     );
 
     const airdropTx = await airdropContract.nftAirdrop(
-        nftTokenAddress,
-        sender,
-        receiverTemp,
-        serialNumber,
-        {
-          value: Constants.ONE_HBAR,
-          ...Constants.GAS_LIMIT_2_000_000
-        }
+      nftTokenAddress,
+      sender,
+      receiverTemp,
+      serialNumber,
+      {
+        value: Constants.ONE_HBAR,
+        ...Constants.GAS_LIMIT_2_000_000
+      }
     );
     await airdropTx.wait();
 
     const airdropTx2 = await airdropContract.nftAirdrop(
-        nftTokenAddress,
-        sender,
-        receiverTemp,
-        serialNumber,
-        {
-          value: Constants.ONE_HBAR,
-          ...Constants.GAS_LIMIT_2_000_000
-        }
+      nftTokenAddress,
+      sender,
+      receiverTemp,
+      serialNumber,
+      {
+        value: Constants.ONE_HBAR,
+        ...Constants.GAS_LIMIT_2_000_000
+      }
     );
-    await expectToBeRejectedWith(() => airdropTx2.wait(), 'transaction execution reverted');
+
+    await expect(airdropTx2.wait()).to.be.rejectedWith('transaction execution reverted');
     expect(await Utils.getHTSResponseCode(airdropTx2.hash)).to.equal('364'); // PENDING_NFT_AIRDROP_ALREADY_EXISTS
   });
 
-  it.skip('should fail to airdrop a token to themselves', async function () {
+  it('should fail to airdrop a token to themselves', async function () {
     const ftAmount = BigInt(1);
     const sender = signers[0].address;
     const tokenAddress = await utils.setupToken(
-        tokenCreateContract,
-        owner,
-        contractAddresses
+      tokenCreateContract,
+      owner,
+      contractAddresses
     );
 
     const airdropTx = await airdropContract.tokenAirdrop(
-        tokenAddress,
-        sender,
-        sender,
-        ftAmount,
-        {
-          value: Constants.ONE_HBAR,
-          ...Constants.GAS_LIMIT_2_000_000
-        }
+      tokenAddress,
+      sender,
+      sender,
+      ftAmount,
+      {
+        value: Constants.ONE_HBAR,
+        ...Constants.GAS_LIMIT_2_000_000
+      }
     );
-    await expectToBeRejectedWith(airdropTx.wait(), 'transaction execution reverted');
+
+    await expect(airdropTx.wait()).to.be.rejectedWith('transaction execution reverted');
     expect(await Utils.getHTSResponseCode(airdropTx.hash)).to.equal('74'); // ACCOUNT_REPEATED_IN_ACCOUNT_AMOUNTS
   });
 
-  it.skip('should fail to delete contract if there is pending airdrop', async function () {
+  it('should fail to delete contract if there is pending airdrop', async function () {
     const sampleContractFactory = await ethers.getContractFactory('Sample');
     const sampleContract = await sampleContractFactory.deploy();
     await sampleContract.waitForDeployment();
@@ -474,36 +465,38 @@ describe('HIP904Batch3 ClaimAirdropContract Test Suite', function () {
     const ftAmount = BigInt(5);
     const sender = signers[0].address;
     const tokenAddress = await utils.setupToken(
-        tokenCreateContract,
-        owner,
-        contractAddresses
+      tokenCreateContract,
+      owner,
+      contractAddresses
     );
 
     const airdropTx = await airdropContract.tokenAirdrop(
-        tokenAddress,
-        sender,
-        sampleContract.target,
-        ftAmount,
-        {
-          value: Constants.ONE_HBAR,
-          ...Constants.GAS_LIMIT_2_000_000
-        }
+      tokenAddress,
+      sender,
+      sampleContract.target,
+      ftAmount,
+      {
+        value: Constants.ONE_HBAR,
+        ...Constants.GAS_LIMIT_2_000_000
+      }
     );
     await airdropTx.wait();
 
     const deleteTx = await sampleContract.selfDestructSample();
-    await expectToBeRejectedWith(deleteTx.wait(), 'reverted');
+
+    await expect(deleteTx.wait()).to.be.rejectedWith('reverted');
     const cr = await Utils.getContractResultFromMN(deleteTx.hash);
     expect(cr.error_message).to.equal('CONTRACT_STILL_OWNS_NFTS');
   });
 
-  it.skip('should fail to airdrop Number.MAX_SAFE_INTEGER + 1 tokens', async function () {
+  it('should fail to airdrop Number.MAX_SAFE_INTEGER + 1 tokens', async function () {
     const tokenAddress = await utils.setupToken(
-        tokenCreateContract,
-        owner,
-        contractAddresses
+      tokenCreateContract,
+      owner,
+      contractAddresses
     );
-    await expectToBeRejectedWith(await airdropContract.tokenAirdrop(
+
+    await expect(airdropContract.tokenAirdrop(
       tokenAddress,
       signers[0].address,
       receiver.address,
@@ -512,6 +505,6 @@ describe('HIP904Batch3 ClaimAirdropContract Test Suite', function () {
         value: Constants.ONE_HBAR,
         ...Constants.GAS_LIMIT_2_000_000
       }
-    ), 'overflow');
+    )).to.be.rejectedWith('overflow');
   });
 });

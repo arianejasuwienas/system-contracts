@@ -1,10 +1,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
-import hre, { network } from "hardhat";
-const { ethers } = await network.connect();
-import utils from '../utils.js';
-import Constants from '../../constants.js';
-import { expect } from "chai";
+const { expect } = require('chai');
+const { ethers } = require('hardhat');
+const utils = require('../utils');
+const Constants = require('../../constants');
 
 describe('HIP904Batch1 AirdropContract Test Suite', function () {
   let airdropContract;
@@ -25,7 +24,7 @@ describe('HIP904Batch1 AirdropContract Test Suite', function () {
       Constants.Contract.TokenCreateContract
     );
     erc20Contract = await utils.deployContract(
-      'ERC20Mock'
+      Constants.Contract.ERC20Contract
     );
     erc721Contract = await utils.deployContract(
       Constants.Contract.ERC721Contract
@@ -60,7 +59,7 @@ describe('HIP904Batch1 AirdropContract Test Suite', function () {
       contractAddresses
     );
 
-    const initialBalance = await erc20Contract['balanceOf(address,address)'](
+    const initialBalance = await erc20Contract.balanceOf(
       tokenAddress,
       receiver
     );
@@ -74,7 +73,7 @@ describe('HIP904Batch1 AirdropContract Test Suite', function () {
     );
     await tx.wait();
 
-    const updatedBalance = await erc20Contract['balanceOf(address,address)'](
+    const updatedBalance = await erc20Contract.balanceOf(
       tokenAddress,
       receiver
     );
@@ -111,7 +110,7 @@ describe('HIP904Batch1 AirdropContract Test Suite', function () {
       contractAddresses
     );
 
-    const initialBalance = await erc20Contract['balanceOf(address,address)'](
+    const initialBalance = await erc20Contract.balanceOf(
       tokenAddress,
       receiver
     );
@@ -125,7 +124,7 @@ describe('HIP904Batch1 AirdropContract Test Suite', function () {
     );
     await tx.wait();
 
-    const updatedBalance = await erc20Contract['balanceOf(address,address)'](
+    const updatedBalance = await erc20Contract.balanceOf(
       tokenAddress,
       receiver
     );
@@ -143,7 +142,7 @@ describe('HIP904Batch1 AirdropContract Test Suite', function () {
     const getBalances = async () =>
       Promise.all(
         accounts.map((account) =>
-          erc20Contract['balanceOf(address,address)'](tokenAddress, account)
+          erc20Contract.balanceOf(tokenAddress, account)
         )
       );
 
@@ -238,7 +237,7 @@ describe('HIP904Batch1 AirdropContract Test Suite', function () {
       );
       await tx.wait();
       for (let j = 0; j < tokens.length; j++) {
-        const balance = await erc20Contract['balanceOf(address,address)'](tokens[j], accounts[i]);
+        const balance = await erc20Contract.balanceOf(tokens[j], accounts[i]);
         expect(balance).to.equal(ftAmount);
       }
     }
@@ -339,10 +338,7 @@ describe('HIP904Batch1 AirdropContract Test Suite', function () {
     expect(responseCode).to.eq('167'); // INVALID_TOKEN_ID code
   });
 
-  it.skip('should fail when the airdrop has multiple sender', async function () {
-    // Skip reason: Interpreted as multiple signer, and thrown error is 398, not 50, as expected.
-    // TX body is correct, but simply bytes meant to represent the amount are beign passed as an input argent
-    // (next field in an encoded tx).
+  it('should fail when the airdrop amounts are out of bounds', async function () {
     const invalidAmount = BigInt(0);
     const receiver = signers[1].address;
 
@@ -353,7 +349,7 @@ describe('HIP904Batch1 AirdropContract Test Suite', function () {
       invalidAmount,
       Constants.GAS_LIMIT_2_000_000
     );
-    const responseCode = utils.getHTSResponseCode(tx.hash);
+    const responseCode = await utils.getHTSResponseCode(tx.hash);
     expect(responseCode).to.eq('50'); // INVALID_TRANSACTION_BODY code
   });
 
@@ -419,7 +415,7 @@ describe('HIP904Batch1 AirdropContract Test Suite', function () {
       (await hre.artifacts.readArtifact('IHRC904AccountFacade')).abi
     );
 
-    const walletIHRC904AccountFacade = new ethers.Contract(
+    walletIHRC904AccountFacade = new ethers.Contract(
       receiver.address,
       IHRC904AccountFacade,
       receiver
@@ -448,7 +444,7 @@ describe('HIP904Batch1 AirdropContract Test Suite', function () {
     expect(responseCode).to.eq('22');
 
     // The airdrop will be pending, so the balance should still be 0
-    const balance = await erc20Contract['balanceOf(address,address)'](
+    const balance = await erc20Contract.balanceOf(
       tokenAddress,
       receiver.address
     );

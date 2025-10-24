@@ -1,10 +1,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
-import hre, { network } from "hardhat";
-const { ethers } = await network.connect();
-import utils from '../utils.js';
-import Constants from '../../constants.js';
-import { expect } from "chai";
+const { expect } = require('chai');
+const { ethers } = require('hardhat');
+const utils = require('../utils');
+const Constants = require('../../constants');
 
 describe('HIP904Batch2 CancelAirdropContract Test Suite', function () {
   let airdropContract;
@@ -16,7 +15,6 @@ describe('HIP904Batch2 CancelAirdropContract Test Suite', function () {
   let owner;
   let receiver;
   let contractAddresses;
-  let tokenAddress;
 
   before(async function () {
     signers = await ethers.getSigners();
@@ -36,7 +34,7 @@ describe('HIP904Batch2 CancelAirdropContract Test Suite', function () {
       Constants.Contract.TokenCreateContract
     );
     erc20Contract = await utils.deployContract(
-      Constants.Contract.ERC20Mock
+      Constants.Contract.ERC20Contract
     );
     erc721Contract = await utils.deployContract(
       Constants.Contract.ERC721Contract
@@ -87,7 +85,7 @@ describe('HIP904Batch2 CancelAirdropContract Test Suite', function () {
       contractAddresses
     );
 
-    const initialBalance = await erc20Contract['balanceOf(address,address)'](
+    const initialBalance = await erc20Contract.balanceOf(
       tokenAddress,
       receiver.address
     );
@@ -112,7 +110,7 @@ describe('HIP904Batch2 CancelAirdropContract Test Suite', function () {
     );
     await cancelTx.wait();
 
-    const updatedBalance = await erc20Contract['balanceOf(address,address)'](
+    const updatedBalance = await erc20Contract.balanceOf(
       tokenAddress,
       receiver.address
     );
@@ -172,7 +170,7 @@ describe('HIP904Batch2 CancelAirdropContract Test Suite', function () {
       );
 
     const initialBalances = await Promise.all(
-      tokens.map(async (token) => erc20Contract['balanceOf(address,address)'](token, receiver))
+      tokens.map(async (token) => erc20Contract.balanceOf(token, receiver))
     );
 
     const cancelTx = await cancelAirdropContract.cancelMultipleAirdrops(
@@ -185,7 +183,7 @@ describe('HIP904Batch2 CancelAirdropContract Test Suite', function () {
     await cancelTx.wait();
 
     for (let i = 0; i < tokens.length; i++) {
-      const updatedBalance = await erc20Contract['balanceOf(address,address)'](tokens[i], receiver);
+      const updatedBalance = await erc20Contract.balanceOf(tokens[i], receiver);
       expect(updatedBalance).to.equal(initialBalances[i]);
     }
   });

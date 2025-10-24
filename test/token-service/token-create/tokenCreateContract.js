@@ -1,57 +1,60 @@
 // SPDX-License-Identifier: Apache-2.0
 
-import utils from '../utils.js';
-import { network } from 'hardhat';
-import { expectValidHash } from '../assertions.js';
-import Constants from '../../constants.js';
-import { pollForNewERC20Balance } from '../../helpers.js';
-import { AccountId, PublicKey, TokenCreateTransaction, TokenSupplyType, TransactionId, } from '@hashgraph/sdk';
-import { expect } from "chai";
-const { ethers } = await network.connect();
+const utils = require('../utils');
+const { expect } = require('chai');
+const { ethers } = require('hardhat');
+const { expectValidHash } = require('../assertions');
+const Constants = require('../../constants');
+const { pollForNewERC20Balance } = require('../../helpers');
+const {
+  TokenCreateTransaction,
+  TransactionId,
+  PublicKey,
+  TokenSupplyType,
+  AccountId,
+} = require('@hashgraph/sdk');
 
 describe('TokenCreateContract Test Suite', function () {
   let tokenCreateContract;
   let tokenTransferContract;
-  let tokenManagementContract;
+  let tokenManagmentContract;
   let tokenQueryContract;
   let erc20Contract;
-  let erc721Contract;
   let tokenAddress;
   let nftTokenAddress;
   let signers;
-  let mintedTokenSerialNumber;
 
   before(async function () {
     signers = await ethers.getSigners();
     tokenCreateContract = await utils.deployTokenCreateContract();
     tokenTransferContract = await utils.deployTokenTransferContract();
-    tokenManagementContract = await utils.deployTokenManagementContract();
+    tokenManagmentContract = await utils.deployTokenManagementContract();
     await utils.updateAccountKeysViaHapi([
       await tokenCreateContract.getAddress(),
       await tokenTransferContract.getAddress(),
-      await tokenManagementContract.getAddress(),
+      await tokenManagmentContract.getAddress(),
     ]);
     erc20Contract = await utils.deployERC20Contract();
     erc721Contract = await utils.deployERC721Contract();
     tokenAddress = await utils.createFungibleTokenWithSECP256K1AdminKey(
       tokenCreateContract,
       signers[0].address,
-      await utils.getSignerCompressedPublicKey()
+      utils.getSignerCompressedPublicKey()
     );
     await utils.updateTokenKeysViaHapi(tokenAddress, [
       await tokenCreateContract.getAddress(),
       await tokenTransferContract.getAddress(),
-      await tokenManagementContract.getAddress(),
+      await tokenManagmentContract.getAddress(),
     ]);
     nftTokenAddress = await utils.createNonFungibleTokenWithSECP256K1AdminKey(
       tokenCreateContract,
       signers[0].address,
-      await utils.getSignerCompressedPublicKey()
+      utils.getSignerCompressedPublicKey()
     );
     await utils.updateTokenKeysViaHapi(nftTokenAddress, [
       await tokenCreateContract.getAddress(),
       await tokenTransferContract.getAddress(),
-      await tokenManagementContract.getAddress(),
+      await tokenManagmentContract.getAddress(),
     ]);
     await utils.associateToken(
       tokenCreateContract,
@@ -71,14 +74,14 @@ describe('TokenCreateContract Test Suite', function () {
     );
   });
 
-  it.skip('should be able to execute burnToken', async function () {
+  it('should be able to execute burnToken', async function () {
     const amount = BigInt(111);
-    const totalSupplyBefore = await erc20Contract['totalSupply(address)'](tokenAddress);
-    const balanceBefore = await erc20Contract['balanceOf(address,address)'](
+    const totalSupplyBefore = await erc20Contract.totalSupply(tokenAddress);
+    const balanceBefore = await erc20Contract.balanceOf(
       tokenAddress,
       signers[0].address
     );
-    await tokenManagementContract.burnTokenPublic(tokenAddress, amount, []);
+    await tokenManagmentContract.burnTokenPublic(tokenAddress, amount, []);
 
     const balanceAfter = await pollForNewERC20Balance(
       erc20Contract,
@@ -87,7 +90,7 @@ describe('TokenCreateContract Test Suite', function () {
       balanceBefore
     );
 
-    const totalSupplyAfter = await erc20Contract['totalSupply(address)'](tokenAddress);
+    const totalSupplyAfter = await erc20Contract.totalSupply(tokenAddress);
 
     expect(totalSupplyAfter).to.equal(totalSupplyBefore - amount);
     expect(balanceAfter).to.equal(balanceBefore - amount);
@@ -95,7 +98,7 @@ describe('TokenCreateContract Test Suite', function () {
 
   it('should be able to execute dissociateTokens and associateTokens', async function () {
     const tokenCreateContractWallet2 = tokenCreateContract.connect(signers[1]);
-    const tokenManagmentContractWallet2 = tokenManagementContract.connect(
+    const tokenManagmentContractWallet2 = tokenManagmentContract.connect(
       signers[1]
     );
 
@@ -110,7 +113,7 @@ describe('TokenCreateContract Test Suite', function () {
       receiptDisassociate.logs.filter(
         (e) => e.fragment.name === Constants.Events.ResponseCode
       )[0].args.responseCode
-    ).to.equal(22n);
+    ).to.equal(22);
 
     const txAssociate = await tokenCreateContractWallet2.associateTokensPublic(
       signers[1].address,
@@ -122,12 +125,12 @@ describe('TokenCreateContract Test Suite', function () {
       receiptAssociate.logs.filter(
         (e) => e.fragment.name === Constants.Events.ResponseCode
       )[0].args.responseCode
-    ).to.equal(22n);
+    ).to.equal(22);
   });
 
   it('should be able to execute dissociateToken and associateToken', async function () {
     const tokenCreateContractWallet2 = tokenCreateContract.connect(signers[1]);
-    const tokenManagmentContractWallet2 = tokenManagementContract.connect(
+    const tokenManagmentContractWallet2 = tokenManagmentContract.connect(
       signers[1]
     );
 
@@ -142,7 +145,7 @@ describe('TokenCreateContract Test Suite', function () {
       receiptDisassociate.logs.filter(
         (e) => e.fragment.name === Constants.Events.ResponseCode
       )[0].args.responseCode
-    ).to.equal(22n);
+    ).to.equal(22);
 
     const txAssociate = await tokenCreateContractWallet2.associateTokenPublic(
       signers[1].address,
@@ -154,7 +157,7 @@ describe('TokenCreateContract Test Suite', function () {
       receiptAssociate.logs.filter(
         (e) => e.fragment.name === Constants.Events.ResponseCode
       )[0].args.responseCode
-    ).to.equal(22n);
+    ).to.equal(22);
   });
 
   it('should be able to execute createFungibleToken', async function () {
@@ -248,7 +251,7 @@ describe('TokenCreateContract Test Suite', function () {
     const { responseCode } = receipt.logs.filter(
       (e) => e.fragment.name === Constants.Events.ResponseCode
     )[0].args;
-    expect(responseCode).to.equal(22n);
+    expect(responseCode).to.equal(22);
     const { serialNumbers } = receipt.logs.filter(
       (e) => e.fragment.name === Constants.Events.MintedToken
     )[0].args;
@@ -265,10 +268,10 @@ describe('TokenCreateContract Test Suite', function () {
       (await grantKycTx.wait()).logs.filter(
         (e) => e.fragment.name === Constants.Events.ResponseCode
       )[0].args.responseCode
-    ).to.equal(22n);
+    ).to.equal(22);
   });
 
-  describe('Hapi vs Ethereum token create test', async function() {
+  describe('Hapi vs Ethereum token create test', function () {
     // @notice: The param values below are preset to match the values preset in the
     // `createFungibleTokenWithSECP256K1AdminKeyPublic()` method in the TokenCreateContract.sol
     const tokenName = 'tokenName';
@@ -278,10 +281,10 @@ describe('TokenCreateContract Test Suite', function () {
     const maxSupply = 20000000000;
     const decimals = 8;
     const freezeDefaultStatus = false;
-    const key = PublicKey.fromBytes(await utils.getSignerCompressedPublicKey());
+    const key = PublicKey.fromBytes(utils.getSignerCompressedPublicKey());
     let signers;
 
-    before(async function() {
+    before(async function () {
       signers = await ethers.getSigners();
       tokenCreateContract = await utils.deployTokenCreateContract();
       tokenQueryContract = await utils.deployTokenQueryContract();
@@ -316,8 +319,8 @@ describe('TokenCreateContract Test Suite', function () {
         .execute(client);
 
       const receipt = await tokenCreate.getReceipt(client);
-
-      return receipt.tokenId.toString();
+      const tokenId = receipt.tokenId.toString();
+      return tokenId;
     }
 
     async function createTokenviaSystemContract() {
@@ -325,7 +328,7 @@ describe('TokenCreateContract Test Suite', function () {
       const tokenAddressTx =
         await tokenCreateContract.createFungibleTokenWithSECP256K1AdminKeyPublic(
           signers[0].address,
-          await utils.getSignerCompressedPublicKey(),
+          utils.getSignerCompressedPublicKey(),
           {
             value: '30000000000000000000',
             gasLimit: 1_000_000,
@@ -339,7 +342,7 @@ describe('TokenCreateContract Test Suite', function () {
       return tokenAddress;
     }
 
-    it('should be able to compare tokens created from system contract and hapi', async function() {
+    it('should be able to compare tokens created from system contract and hapi', async function () {
       const hapiTokenAddress =
         '0x' +
         AccountId.fromString(await createTokenviaHapi()).toSolidityAddress();
@@ -367,12 +370,12 @@ describe('TokenCreateContract Test Suite', function () {
         (await hapiTokenInfoTx.wait()).logs.filter(
           (e) => e.fragment.name === Constants.Events.ResponseCode
         )[0].args.responseCode
-      ).to.equal(22n);
+      ).to.equal(22);
       expect(
         (await precompileTokenInfoTx.wait()).logs.filter(
           (e) => e.fragment.name === Constants.Events.ResponseCode
         )[0].args.responseCode
-      ).to.equal(22n);
+      ).to.equal(22);
       expect(hapiTokenInfo).not.null;
       expect(precompileTokenInfo).not.null;
 
