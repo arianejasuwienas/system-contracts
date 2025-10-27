@@ -43,7 +43,7 @@ describe('HIP904Batch2 IHRC904Facade Contract Test Suite', function () {
     });
 
     erc20Contract = await utils.deployContract(
-      Constants.Contract.ERC20Contract
+      Constants.Contract.ERC20ProxyMock
     );
     erc721Contract = await utils.deployContract(
       Constants.Contract.ERC721Contract

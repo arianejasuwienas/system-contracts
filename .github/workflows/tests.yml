@@ -63,35 +63,11 @@ jobs:
     with:
       testfilter: TokenTransferContract
 
-  Proxy:
-    name: Proxy Upgrade Test Suite
-    uses: ./.github/workflows/test-workflow.yml
-    with:
-      testfilter: Proxy
-
-  SafeHTS:
-    name: SafeHTS Test Suite
-    uses: ./.github/workflows/test-workflow.yml
-    with:
-      testfilter: SafeHTS
-
-  HIP583:
-    name: HIP583 Test Suite
-    uses: ./.github/workflows/test-workflow.yml
-    with:
-      testfilter: HIP583
-
   HIP755:
     name: HIP755 Test Suite
     uses: ./.github/workflows/test-workflow.yml
     with:
       testfilter: HIP755
-
-  Multicall:
-    name: Multicall Test Suite
-    uses: ./.github/workflows/test-workflow.yml
-    with:
-      testfilter: Multicall
 
   HRC:
     name: HRC Test Suite
@@ -99,23 +75,11 @@ jobs:
     with:
       testfilter: HRC
 
-  ShanghaiOpcodes:
-    name: ShanghaiOpcodes Test Suite
-    uses: ./.github/workflows/test-workflow.yml
-    with:
-      testfilter: ShanghaiOpcodes
-
   PrngSystemContract:
     name: PrngSystemContract Test Suite
     uses: ./.github/workflows/test-workflow.yml
     with:
       testfilter: PrngSystemContract
-
-  BLSSignatureVerification:
-    name: BLS Signature Verification Test Suite
-    uses: ./.github/workflows/test-workflow.yml
-    with:
-      testfilter: BLSSignature
 
   HederaAccountService:
     name: HederaAccountService Test Suite

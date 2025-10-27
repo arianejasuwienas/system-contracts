@@ -76,14 +76,6 @@ class Utils {
     );
   }
 
-  static async deployERC20Mock() {
-    return await this.deployContract(Constants.Path.HIP583_ERC20Mock);
-  }
-
-  static async deployERC721Mock() {
-    return await this.deployContract(Constants.Path.HIP583_ERC721Mock);
-  }
-
   static async deployTokenCreateContract() {
     return await this.deployContract(Constants.Contract.TokenCreateContract);
   }
@@ -770,13 +762,13 @@ class Utils {
    * @dev Constructs a key conforming to the IHederaTokenService.TokenKey type
    *
    * @param keyType ADMIN | KYC | FREEZE | WIPE | SUPPLY | FEE | PAUSE
-   *                See https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/system-contracts/hedera-token-service/IHederaTokenService.sol#L128
+   *                See https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/token-service/IHederaTokenService.sol#L128
    *                for more information
    *
    * @param keyValueType INHERIT_ACCOUNT_KEY | CONTRACT_ID | ED25519 | SECP256K1 | DELEGETABLE_CONTRACT_ID
    *
    * @param value bytes value, public address of an account, or boolean
-   *            See https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/system-contracts/hedera-token-service/IHederaTokenService.sol#L92
+   *            See https://github.com/hashgraph/hedera-smart-contracts/blob/main/contracts/token-service/IHederaTokenService.sol#L92
    *                     for more information
    */
   static constructIHederaTokenKey(keyType, keyValueType, value) {

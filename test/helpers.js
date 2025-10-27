@@ -293,32 +293,6 @@ const pollForNewERC20Balance = async (
   );
 };
 
-const pollForNewHBarBalance = async (
-  provider,
-  signers0BeforeHbarBalance,
-  signer1AccountID
-) => {
-  for (
-    let numberOfTries = 0;
-    numberOfTries < process.env.MAX_RETRY;
-    numberOfTries++
-  ) {
-    const signers0AfterHbarBalance = await provider.getBalance(
-      signer1AccountID
-    );
-
-    if (signers0AfterHbarBalance !== signers0BeforeHbarBalance) {
-      return signers0AfterHbarBalance;
-    }
-
-    await delay();
-  }
-
-  throw new Error(
-    `Failed to get a different balance after ${process.env.MAX_RETRY} tries`
-  );
-};
-
 const pollForNewSignerBalance = async (
   IERC20Contract,
   signersAddress,
@@ -427,7 +401,6 @@ module.exports = {
   pollForLastEvent,
   pollForNewBalance,
   pollForNewCounterValue,
-  pollForNewHBarBalance,
   pollForNewSignerBalanceUsingProvider,
   pollForNewERC721Balance,
   pollForNewERC721Owner,
