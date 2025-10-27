@@ -9,7 +9,7 @@ const {
   pollForNewSignerBalance,
 } = require('../../helpers');
 
-describe('IERC20 Test Suite', function () {
+describe.only('IERC20 Test Suite', function () {
   let tokenCreateContract;
   let tokenTransferContract;
   let tokenAddress;

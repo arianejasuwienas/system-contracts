@@ -73,7 +73,7 @@ const Contract = {
   Test2Facet: 'Test2Facet',
   ERC1155Mock: 'ERC1155Mock',
   ContractTransferTx: 'ContractTransferTx',
-  ERC721Contract: 'ERC721Mock',
+  ERC721Contract: 'ERC721Contract',
   TokenCreateCustomContract: 'TokenCreateCustomContract',
   TokenManagementContract: 'TokenManagementContract',
   TokenQueryContract: 'TokenQueryContract',

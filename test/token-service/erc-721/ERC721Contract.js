@@ -5,7 +5,7 @@ const { ethers } = require('hardhat');
 const utils = require('../utils');
 const Constants = require('../../constants');
 
-describe.only('ERC721Contract Test Suite', function () {
+describe('ERC721Contract Test Suite', function () {
   let tokenCreateContract;
   let tokenTransferContract;
   let tokenAddress;

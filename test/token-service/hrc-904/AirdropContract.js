@@ -24,7 +24,7 @@ describe('HIP904Batch1 AirdropContract Test Suite', function () {
       Constants.Contract.TokenCreateContract
     );
     erc20Contract = await utils.deployContract(
-      Constants.Contract.ERC20Contract
+      Constants.Contract.ERC20ProxyMock
     );
     erc721Contract = await utils.deployContract(
       Constants.Contract.ERC721Contract
