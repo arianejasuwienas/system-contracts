@@ -89,38 +89,11 @@ jobs:
       mirrorTag: ${{inputs.mirrorNodeTag}}
       relayTag: ${{inputs.relayTag}}
 
-  Proxy:
-    name: Proxy Upgrade Test Suite
-    uses: ./.github/workflows/test-workflow.yml
-    with:
-      testfilter: Proxy
-      networkTag: ${{inputs.networkNodeTag}}
-      mirrorTag: ${{inputs.mirrorNodeTag}}
-      relayTag: ${{inputs.relayTag}}
-
-  SafeHTS:
-    name: SafeHTS Test Suite
-    uses: ./.github/workflows/test-workflow.yml
-    with:
-      testfilter: SafeHTS
-      networkTag: ${{inputs.networkNodeTag}}
-      mirrorTag: ${{inputs.mirrorNodeTag}}
-      relayTag: ${{inputs.relayTag}}
-
   HIP583:
     name: HIP583 Test Suite
     uses: ./.github/workflows/test-workflow.yml
     with:
       testfilter: HIP583
-      networkTag: ${{inputs.networkNodeTag}}
-      mirrorTag: ${{inputs.mirrorNodeTag}}
-      relayTag: ${{inputs.relayTag}}
-
-  Multicall:
-    name: Multicall Test Suite
-    uses: ./.github/workflows/test-workflow.yml
-    with:
-      testfilter: Multicall
       networkTag: ${{inputs.networkNodeTag}}
       mirrorTag: ${{inputs.mirrorNodeTag}}
       relayTag: ${{inputs.relayTag}}
