@@ -67,7 +67,6 @@ const Contract = {
   HRC719Contract: 'HRC719Contract',
   ExchangeRateMock: 'ExchangeRateMock',
   PrngSystemContract: 'PrngSystemContract',
-  EcrecoverCaller: 'EcrecoverCaller',
   CryptoAllowance: 'CryptoAllowance',
   CryptoOwner: 'CryptoOwner',
   Airdrop: 'Airdrop',
