@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 import "../../account-service/HederaAccountService.sol";
-import "../../../token-service/HederaTokenService.sol";
+import "../../token-service/HederaTokenService.sol";
 
 interface ICryptoAllowance {
     function cryptoTransferPublic(IHederaTokenService.TransferList calldata transferList, IHederaTokenService.TokenTransferList[] calldata tokenTransferList) external returns (int responseCode);
