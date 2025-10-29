@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.0;
 
-import "../../HederaAccountService.sol";
+import "../../account-service/HederaAccountService.sol";
 import "../../../token-service/HederaTokenService.sol";
 
 contract CryptoAllowance is HederaAccountService, HederaTokenService {

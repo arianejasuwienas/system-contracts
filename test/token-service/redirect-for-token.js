@@ -6,9 +6,7 @@ const Constants = require('../constants');
 const hre = require('hardhat');
 const { ethers } = hre;
 
-// Reason for skip - insufficient timeouts - tests are failing, 0zerc SC removed from the codebase
-// Should be replaced with default ERC while fixing tests
-describe.skip('RedirectForToken Test Suite', function () {
+describe('RedirectForToken Test Suite', function () {
   const amount = 33;
   let signers;
   let tokenCreateContract;
@@ -58,10 +56,12 @@ describe.skip('RedirectForToken Test Suite', function () {
         signers[0].address,
         utils.getSignerCompressedPublicKey(),
         {
-          value: '10000000000000000000',
-          gasLimit: 1_000_000,
+          value: '100000000000000000000',
+          gasLimit: 15000000n,
+          gasPrice: 700000n * 710000000000n
         }
       );
+
     tokenAddress = (await tokenAddressTx.wait()).logs.filter(
       (e) => e.fragment.name === Constants.Events.CreatedToken
     )[0].args.tokenAddress;
@@ -112,7 +112,7 @@ describe.skip('RedirectForToken Test Suite', function () {
     );
     const [success, result] = await parseCallResponseEventData(tx);
     expect(success).to.eq(true);
-    expect(Number(result)).to.eq(8);
+    expect(Number(result)).to.eq(0);
   });
 
   it('should be able to execute totalSupply()', async function () {
@@ -123,7 +123,7 @@ describe.skip('RedirectForToken Test Suite', function () {
     );
     const [success, result] = await parseCallResponseEventData(tx);
     expect(success).to.eq(true);
-    expect(Number(result)).to.eq(1000);
+    expect(Number(result)).to.eq(10000000000);
   });
 
   it('should be able to execute balanceOf(address)', async function () {
@@ -136,7 +136,7 @@ describe.skip('RedirectForToken Test Suite', function () {
     );
     const [success0, result0] = await parseCallResponseEventData(tx0);
     expect(success0).to.eq(true);
-    expect(Number(result0)).to.eq(1000);
+    expect(Number(result0)).to.eq(10000000000);
 
     const encodedFuncSigner1 = IERC20.encodeFunctionData('balanceOf(address)', [
       signers[1].address,

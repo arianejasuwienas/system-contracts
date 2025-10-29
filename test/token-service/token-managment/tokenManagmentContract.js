@@ -1384,10 +1384,7 @@ describe('TokenManagmentContract Test Suite', function () {
     });
   });
 
-  // TODO in tests fixing tast.
-  // To be fixed later, seems to require specific, obsolete localnode version
-  // Some of the failing scripts expect different ResponseCodes than actually received
-  describe.skip('Update fees', function () {
+  describe('Update fees', function () {
     let feeToken;
     let tokenWithFees;
     let tenHbars;
@@ -2811,21 +2808,20 @@ describe('TokenManagmentContract Test Suite', function () {
         feeToken
       );
       const transferNftToSigner3 =
-        await tokenTransferContract.transferNFTPublic(
-          nft,
-          signers[1].address,
-          signers[3].address,
-          nftTx
-        );
-      await transferNftToSigner3.wait();
-
-      expect(
-        await utils.getTokenBalance(signers[1].address, feeToken)
-      ).to.equal(balanceBeforeSigner1 - (tokenFeeAmount + 13));
-      expect(
-        await utils.getTokenBalance(signers[0].address, feeToken)
-      ).to.equal(balanceBeforeFeeCollector + (tokenFeeAmount + 13));
-      expect(await utils.getTokenBalance(signers[3].address, nft)).to.equal(1);
+          await tokenTransferContract.transferNFTPublic(
+            nft,
+            signers[1].address,
+            signers[3].address,
+            nftTx
+          );
+        await transferNftToSigner3.wait();
+        expect(
+          await utils.getTokenBalance(signers[1].address, feeToken)
+        ).to.equal(balanceBeforeSigner1 - (tokenFeeAmount + 13));
+        expect(
+          await utils.getTokenBalance(signers[0].address, feeToken)
+        ).to.equal(balanceBeforeFeeCollector + (tokenFeeAmount + 13));
+        expect(await utils.getTokenBalance(signers[3].address, nft)).to.equal(1);
     });
 
     it('should be able to update fixed HTS fee and royalty fee in NFT', async function () {
