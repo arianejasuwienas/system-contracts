@@ -3296,7 +3296,7 @@ describe('TokenManagmentContract Test Suite', function () {
       // which enforces a maximum of 10 custom fees per token. This validation was previously done at the SDK level.
       // TODO: Re-enable tests once validation is properly handled - see https://github.com/hashgraph/hedera-services/issues/17533
       // and https://github.com/hashgraph/hedera-smart-contracts/issues/1207
-      it.only('should fail when updating fungible token fees to more than 10', async function () {
+      it.skip('should fail when updating fungible token fees to more than 10', async function () {
         let transactionHash;
         tokenWithFees = await utils.createFungibleTokenWithCustomFeesAndKeys(
           tokenCreateCustomContract,
