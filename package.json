@@ -32,6 +32,7 @@
   "homepage": "https://github.com/hashgraph/hedera-smart-contracts#readme",
   "scripts": {
     "hh:compile": "hardhat compile",
+    "hh:test": "hardhat test",
     "hedera:start": "npx @hashgraph/hedera-local start --limits=false --dev=true --balance=10000000",
     "hedera:stop": "npx @hashgraph/hedera-local stop",
     "prepare": "husky install",
