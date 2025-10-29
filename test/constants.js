@@ -54,7 +54,7 @@ const Path = {
 
 const Contract = {
   ERC20Mock: 'ERC20Mock',
-  ERC20ProxyMock: 'ERC20ProxyMock',
+  ERC20Contract: 'ERC20Contract',
   ERC721Mock: 'ERC721Mock',
   ERC721ProxyMock: 'ERC721ProxyMock',
   TokenCreateContract: 'TokenCreateContract',

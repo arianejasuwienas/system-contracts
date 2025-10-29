@@ -101,7 +101,7 @@ class Utils {
   }
 
   static async deployERC20Contract() {
-    return await this.deployContract(Constants.Contract.ERC20ProxyMock);
+    return await this.deployContract(Constants.Contract.ERC20Contract);
   }
 
   static async deployERC721Contract() {

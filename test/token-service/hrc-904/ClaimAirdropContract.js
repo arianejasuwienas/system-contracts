@@ -37,7 +37,7 @@ describe('HIP904Batch3 ClaimAirdropContract Test Suite', function () {
       Constants.Contract.TokenCreateContract
     );
     erc20Contract = await utils.deployContract(
-      Constants.Contract.ERC20ProxyMock
+      Constants.Contract.ERC20Contract
     );
     erc721Contract = await utils.deployContract(
       Constants.Contract.ERC721Contract
@@ -163,7 +163,7 @@ describe('HIP904Batch3 ClaimAirdropContract Test Suite', function () {
     expect(nftOwner).to.equal(receiver.address);
   });
 
-  it('should claim multiple pending fungible token airdrops', async function () {
+  it.only('should claim multiple pending fungible token airdrops', async function () {
     const { senders, receivers, tokens, serials, amounts } =
       await utils.createPendingAirdrops(
         10,

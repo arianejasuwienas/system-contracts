@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 
-contract ERC20ProxyMock {
+contract ERC20Contract {
     function name(address token) public view returns (string memory) {
         return IERC20Metadata(token).name();
     }
