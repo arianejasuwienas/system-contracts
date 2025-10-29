@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity >=0.4.9 <0.9.0;
 
-import "../../HederaScheduleService.sol";
-import "../../../token-service/HederaTokenService.sol";
+import "../../schedule-service/HederaScheduleService.sol";
+import "../../token-service/HederaTokenService.sol";
 
 pragma experimental ABIEncoderV2;
 

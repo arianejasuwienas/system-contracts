@@ -2,10 +2,10 @@
 pragma solidity >=0.5.0 <0.9.0;
 pragma experimental ABIEncoderV2;
 
-import "../HederaResponseCodes.sol";
-import "../HederaTokenService.sol";
-import "../KeyHelper.sol";
-import "../FeeHelper.sol";
+import "../../token-service-v2/HederaResponseCodes.sol";
+import "../../token-service-v2/HederaTokenService.sol";
+import "../../token-service-v2/KeyHelper.sol";
+import "../../token-service-v2/FeeHelper.sol";
 
 contract HIP1028Contract is HederaTokenService, KeyHelper, FeeHelper {
     event TokenAddress(address);
