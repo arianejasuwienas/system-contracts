@@ -163,7 +163,7 @@ describe('HIP904Batch3 ClaimAirdropContract Test Suite', function () {
     expect(nftOwner).to.equal(receiver.address);
   });
 
-  it.only('should claim multiple pending fungible token airdrops', async function () {
+  it('should claim multiple pending fungible token airdrops', async function () {
     const { senders, receivers, tokens, serials, amounts } =
       await utils.createPendingAirdrops(
         10,
