@@ -1,5 +1,5 @@
 {
-  "name": "@hashgraph/system-contracts",
+  "name": "@jasuwienas/hashgraph-contracts",
   "version": "0.1.0",
   "description": "Secure Hedera System Smart Contract Library for Solidity",
   "files": [
@@ -8,7 +8,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hashgraph/system-contracts.git"
+    "url": "git+https://github.com/arianejasuwienas/system-contracts.git"
   },
   "author": "2025 Hedera Hashgraph, LLC",
   "license": "Apache-2.0",
