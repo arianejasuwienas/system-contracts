@@ -32,5 +32,6 @@ jobs:
 
       - name: Publish NPM package
         run: npm publish --access public
+        working-directory: ./contracts
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
