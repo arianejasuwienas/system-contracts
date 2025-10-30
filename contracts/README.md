@@ -10,6 +10,56 @@
 $ npm install @hashgraph/contracts
 ```
 
+### Prerequisites
+
+For this script to work, you need to communicate with the Hedera consensus node precompiles.
+To access them, you must first start a local Hedera node.
+
+1. Start a Solo Node
+
+    Make sure you have the following prerequisites set up:
+    
+    * **Node.js** ≥ 20.19.0
+      * **Docker** and **Docker Compose** installed and running
+    
+    Then start a local Hedera Solo node with a single command:
+    
+    ```bash
+    npx @hashgraph/solo one-shot single deploy
+    ```
+    
+    This launches a single-node Hedera network locally for quick testing and development.
+
+2. Configure Hardhat to communicate with your local node
+
+Install the required dependencies:
+```bash
+npm i -D hardhat @nomicfoundation/hardhat-ethers ethers
+```
+
+Add a `hardhat.config.ts` (or `.js`) with a `solo` network:
+
+```ts
+import { HardhatUserConfig } from "hardhat/config";
+import "@nomicfoundation/hardhat-ethers";
+
+const PRIVATE_KEY = process.env.PRIVATE_KEY || "0xYOUR_ECDSA_SECP256K1_PRIVATE_KEY";
+
+const config: HardhatUserConfig = {
+  solidity: "0.8.24",
+  networks: {
+    solo: {
+      url: "http://127.0.0.1:7546", // Solo JSON-RPC
+      chainId: 298,                 // Solo chain id
+      accounts: [PRIVATE_KEY],      // After starting the Solo node, you’ll be shown pre-created account IDs
+    },
+  },
+};
+
+export default config;
+```
+
+
 ### Usage
 
 Once installed, you can use the contracts in the library by importing them:
