@@ -62,7 +62,7 @@ jobs:
         run: npm ci
 
       - name: Start the local node
-        run: npx hedera start -d --network-tag=${{inputs.networkTag}} --mirror-tag=${{inputs.mirrorTag}} --relay-tag=${{inputs.relayTag}} --verbose=trace
+        run: npx @hashgraph/solo one-shot single deploy
         timeout-minutes: 5
 
       - name: Run the test in ${{ inputs.testfilter }}
@@ -86,4 +86,4 @@ jobs:
 
       - name: Stop the local node
         if: ${{ !cancelled() }}
-        run: npx hedera stop
+        run: npx @hashgraph/solo one-shot single destroy
