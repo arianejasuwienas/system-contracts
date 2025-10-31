@@ -34,14 +34,13 @@ To access them, you must first start a local Hedera node.
 
 Install the required dependencies:
 ```bash
-npm i -D hardhat @nomicfoundation/hardhat-ethers ethers
+npm install --save-dev hardhat@^2
 ```
 
 Add a `hardhat.config.ts` (or `.js`) with a `solo` network:
 
 ```ts
 import { HardhatUserConfig } from "hardhat/config";
-import "@nomicfoundation/hardhat-ethers";
 
 const PRIVATE_KEY = process.env.PRIVATE_KEY || "0xYOUR_ECDSA_SECP256K1_PRIVATE_KEY";
 
@@ -104,4 +103,3 @@ to [oss@hedera.com](mailto:oss@hedera.com).
 ## License
 
 [Apache License 2.0](https://github.com/hashgraph/hedera-smart-contracts/blob/main/LICENSE)
-
