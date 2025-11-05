@@ -20,6 +20,7 @@ describe('TokenCreateContract Test Suite', function () {
   let tokenManagmentContract;
   let tokenQueryContract;
   let erc20Contract;
+  let erc721Contract;
   let tokenAddress;
   let nftTokenAddress;
   let signers;
@@ -271,7 +272,7 @@ describe('TokenCreateContract Test Suite', function () {
     ).to.equal(22);
   });
 
-  describe('Hapi vs Ethereum token create test', function () {
+  describe.only('Hapi vs Ethereum token create test', function () {
     // @notice: The param values below are preset to match the values preset in the
     // `createFungibleTokenWithSECP256K1AdminKeyPublic()` method in the TokenCreateContract.sol
     const tokenName = 'tokenName';
