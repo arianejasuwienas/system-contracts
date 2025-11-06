@@ -30,7 +30,7 @@ function getMirrorNodeUrl(network) {
     case 'previewnet':
       return 'https://previewnet.mirrornode.hedera.com/api/v1';
     case 'local':
-      return 'http://127.0.0.1:5551/api/v1';
+      return 'http://127.0.0.1:8081/api/v1';
     default:
       throw new Error('Unknown network');
   }
@@ -561,6 +561,7 @@ class Utils {
     const query = new AccountInfoQuery().setAccountId(
       AccountId.fromEvmAddress(0, 0, evmAddress)
     );
+
 
     const accountInfo = await query.execute(client);
     return accountInfo.accountId.toString();
