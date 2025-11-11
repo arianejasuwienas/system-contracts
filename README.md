@@ -68,7 +68,3 @@ to [oss@hedera.com](mailto:oss@hedera.com).
 ## License
 
 [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
-
-## Smart contracts - testing
-
-[Smart contracts tests - documentation](https://raw.githubusercontent.com/hashgraph/hedera-smart-contracts/main/test/README.md)
