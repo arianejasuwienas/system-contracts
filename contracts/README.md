@@ -13,9 +13,16 @@ To access them, you must first start a local Hedera node.
 
     Make sure you have the following prerequisites set up:
     
-    * **Node.js** ≥ 20.19.0 with npm
-    * **Docker** and **Docker Compose** installed and running
-    
+    * **Node.js** ≥ 20.19.0 with npm ([details](https://docs.npmjs.com))
+    * **Docker** and **Docker Compose** installed and running - ([details](https://docs.docker.com))
+    * **Kind** ([details](https://kind.sigs.k8s.io))
+
+    Install solo node library:
+
+    ```bash
+    npm install @hashgraph/solo --save-dev
+    ```
+
     Then start a local Hedera Solo node with a single command:
     
     ```bash
