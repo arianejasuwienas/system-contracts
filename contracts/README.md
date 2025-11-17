@@ -15,13 +15,6 @@ To access them, you must first start a local Hedera node.
     
     * **Node.js** ≥ 20.19.0 with npm ([details](https://docs.npmjs.com))
     * **Docker** and **Docker Compose** installed and running - ([details](https://docs.docker.com))
-    * **Kind** ([details](https://kind.sigs.k8s.io))
-
-    Install solo node library:
-
-    ```bash
-    npm install @hashgraph/solo --save-dev
-    ```
 
     Then start a local Hedera Solo node with a single command:
     
@@ -30,6 +23,9 @@ To access them, you must first start a local Hedera node.
     ```
     
     This launches a single-node Hedera network locally for quick testing and development.
+    If the `@hashgraph/solo` is not yet installed, `npx` will prompt for confirmation to install it.
+
+    > Note: This command will install additional required tools (such as [Kind](https://kind.sigs.k8s.io/)) inside the Docker container.
 
 2. Configure Hardhat to communicate with your local node
 
