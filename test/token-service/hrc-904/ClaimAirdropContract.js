@@ -4,7 +4,6 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const utils = require('../utils');
 const Constants = require('../../constants');
-const Utils = require("../utils");
 
 describe('HIP904Batch3 ClaimAirdropContract Test Suite', function () {
   let airdropContract;
@@ -388,7 +387,7 @@ describe('HIP904Batch3 ClaimAirdropContract Test Suite', function () {
     );
 
     await expect(airdropTx2.wait()).to.be.rejectedWith('transaction execution reverted');
-    expect(await Utils.getHTSResponseCode(airdropTx2.hash)).to.equal('237'); // SENDER_DOES_NOT_OWN_NFT_SERIAL_NO
+    expect(await utils.getHTSResponseCode(airdropTx2.hash)).to.equal('237'); // SENDER_DOES_NOT_OWN_NFT_SERIAL_NO
   });
 
   it('should fail with `PENDING_NFT_AIRDROP_ALREADY_EXISTS` when contract airdrops multiple duplicated NFT tokens to an account with max auto associations disabled', async function () {
@@ -430,7 +429,7 @@ describe('HIP904Batch3 ClaimAirdropContract Test Suite', function () {
     );
 
     await expect(airdropTx2.wait()).to.be.rejectedWith('transaction execution reverted');
-    expect(await Utils.getHTSResponseCode(airdropTx2.hash)).to.equal('364'); // PENDING_NFT_AIRDROP_ALREADY_EXISTS
+    expect(await utils.getHTSResponseCode(airdropTx2.hash)).to.equal('364'); // PENDING_NFT_AIRDROP_ALREADY_EXISTS
   });
 
   it('should fail to airdrop a token to themselves', async function () {
@@ -454,7 +453,7 @@ describe('HIP904Batch3 ClaimAirdropContract Test Suite', function () {
     );
 
     await expect(airdropTx.wait()).to.be.rejectedWith('transaction execution reverted');
-    expect(await Utils.getHTSResponseCode(airdropTx.hash)).to.equal('74'); // ACCOUNT_REPEATED_IN_ACCOUNT_AMOUNTS
+    expect(await utils.getHTSResponseCode(airdropTx.hash)).to.equal('74'); // ACCOUNT_REPEATED_IN_ACCOUNT_AMOUNTS
   });
 
   it('should fail to delete contract if there is pending airdrop', async function () {
@@ -485,7 +484,7 @@ describe('HIP904Batch3 ClaimAirdropContract Test Suite', function () {
     const deleteTx = await sampleContract.selfDestructSample();
 
     await expect(deleteTx.wait()).to.be.rejectedWith('reverted');
-    const cr = await Utils.getContractResultFromMN(deleteTx.hash);
+    const cr = await utils.getContractResultFromMN(deleteTx.hash);
     expect(cr.error_message).to.equal('CONTRACT_STILL_OWNS_NFTS');
   });
 

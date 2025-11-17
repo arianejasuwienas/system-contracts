@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 const utils = require('../../token-service/utils');
-const Utils = require('../../token-service/utils');
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const Constants = require('../../constants');
@@ -20,7 +19,7 @@ describe('@HAS IHRC-906 Test Suite', () => {
   const amount = 3000;
 
   before(async () => {
-    [walletA, walletB, walletC, receiver] = await ethers.getSigners();
+    [walletA, walletB, walletC] = await ethers.getSigners();
 
     // deploy cyprtoAllowanceContract
     const CryptoAllowanceFactory = await ethers.getContractFactory(
@@ -91,7 +90,7 @@ describe('@HAS IHRC-906 Test Suite', () => {
 
   it('Should allow an approval on behalf of hbar owner WITH its signature', async () => {
     // update accountKeys
-    const ecdsaPrivateKeys = await Utils.getHardhatSignersPrivateKeys(false);
+    const ecdsaPrivateKeys = await utils.getHardhatSignersPrivateKeys(false);
     await utils.updateAccountKeysViaHapi(
       [cryptoAllowanceAddress],
       [ecdsaPrivateKeys[0]] // walletA's key
