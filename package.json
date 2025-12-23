@@ -6,6 +6,7 @@
     "/contracts/**/*.sol",
     "!/contracts/mocks/**/*"
   ],
+  "type": "commonjs",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hashgraph/system-contracts.git"

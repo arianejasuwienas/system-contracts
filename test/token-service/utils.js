@@ -17,24 +17,14 @@ const {
   AccountBalanceQuery,
   ContractInfoQuery,
   AccountDeleteTransaction,
+  Hbar,
+  HbarUnit,
+  ScheduleCreateTransaction,
+  TransferTransaction,
+  Timestamp
 } = require('@hashgraph/sdk');
 const Constants = require('../constants');
 const axios = require('axios');
-
-function getMirrorNodeUrl(network) {
-  switch (network) {
-    case 'mainnet':
-      return 'https://mainnet.mirrornode.hedera.com/api/v1';
-    case 'testnet':
-      return 'https://testnet.mirrornode.hedera.com/api/v1';
-    case 'previewnet':
-      return 'https://previewnet.mirrornode.hedera.com/api/v1';
-    case 'local':
-      return 'http://127.0.0.1:5551/api/v1';
-    default:
-      throw new Error('Unknown network');
-  }
-}
 
 class Utils {
   static createTokenCost = '50000000000000000000';
@@ -74,6 +64,21 @@ class Utils {
       contractPath,
       await contract.getAddress()
     );
+  }
+
+  static getMirrorNodeUrl(network) {
+    switch (network) {
+      case 'mainnet':
+        return 'https://mainnet.mirrornode.hedera.com/api/v1';
+      case 'testnet':
+        return 'https://testnet.mirrornode.hedera.com/api/v1';
+      case 'previewnet':
+        return 'https://previewnet.mirrornode.hedera.com/api/v1';
+      case 'local':
+        return 'http://127.0.0.1:5551/api/v1';
+      default:
+        throw new Error('Unknown network');
+    }
   }
 
   static async deployTokenCreateContract() {
@@ -827,7 +832,7 @@ class Utils {
    */
   static async getHTSResponseCode(txHash) {
     const network = hre.network.name;
-    const mirrorNodeUrl = getMirrorNodeUrl(network);
+    const mirrorNodeUrl = Utils.getMirrorNodeUrl(network);
     const res = await axios.get(
       `${mirrorNodeUrl}/contracts/results/${txHash}/actions`
     );
@@ -839,7 +844,7 @@ class Utils {
 
   static async getTokenInfoByMN(tokenAddress) {
     const network = hre.network.name;
-    const mirrorNodeUrl = getMirrorNodeUrl(network);
+    const mirrorNodeUrl = Utils.getMirrorNodeUrl(network);
     const res = await axios.get(
       `${mirrorNodeUrl}/tokens/${tokenAddress}`
     );
@@ -857,7 +862,7 @@ class Utils {
    */
   static async getContractResultFromMN(txHash) {
     const res = await axios.get(
-      `${getMirrorNodeUrl(hre.network.name)}/contracts/results/${txHash}`
+      `${Utils.getMirrorNodeUrl(hre.network.name)}/contracts/results/${txHash}`
     );
 
     return res.data;
@@ -874,7 +879,7 @@ class Utils {
    */
   static async getHASResponseCode(txHash) {
     const network = hre.network.name;
-    const mirrorNodeUrl = getMirrorNodeUrl(network);
+    const mirrorNodeUrl = Utils.getMirrorNodeUrl(network);
     const res = await axios.get(
       `${mirrorNodeUrl}/contracts/results/${txHash}/actions`
     );
@@ -991,6 +996,36 @@ class Utils {
     return { senders, receivers, tokens, serials, amounts };
   }
 
+  static getRandomInt = (min, max) => {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  };
+
+  static createScheduleTransactionForTransfer = async (senderInfo, receiverInfo, client, adminPrivateKey = null, expiryNs = 0) => {
+    const transferAmountAsTinybars = this.getRandomInt(1, 100_000_000);
+    const transferAmountAsWeibar = BigInt(transferAmountAsTinybars) * BigInt(Utils.tinybarToWeibarCoef);
+
+    let transferTx = await new TransferTransaction()
+      .addHbarTransfer(senderInfo.accountId, new Hbar(-transferAmountAsTinybars, HbarUnit.Tinybar))
+      .addHbarTransfer(receiverInfo.accountId, new Hbar(transferAmountAsTinybars, HbarUnit.Tinybar));
+
+    const tx = new ScheduleCreateTransaction()
+      .setScheduledTransaction(transferTx);
+
+    if (expiryNs) {
+      let timestamp = (Timestamp.generate()).plusNanos(expiryNs);
+      tx.setExpirationTime(timestamp);
+      tx.setWaitForExpiry(true);
+    }
+
+    if (adminPrivateKey) {
+      tx.setAdminKey(adminPrivateKey.publicKey);
+    }
+
+    const {scheduleId} = await (await tx.execute(client)).getReceipt(client);
+
+    return {scheduleId, transferAmountAsWeibar};
+  };
+
   /**
    * Retrieves the maximum number of automatic token associations for an account from the mirror node
    * @param {string} evmAddress - The EVM address of the account to query
@@ -1002,7 +1037,7 @@ class Utils {
    */
   static async getMaxAutomaticTokenAssociations(evmAddress) {
     const network = hre.network.name;
-    const mirrorNodeUrl = getMirrorNodeUrl(network);
+    const mirrorNodeUrl = Utils.getMirrorNodeUrl(network);
     const response = await axios.get(`${mirrorNodeUrl}/accounts/${evmAddress}`);
     return response.data.max_automatic_token_associations;
   }

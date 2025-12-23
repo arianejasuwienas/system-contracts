@@ -74,6 +74,7 @@ const Contract = {
   TokenReject: 'TokenReject',
   AliasAccountUtility: 'AliasAccountUtility',
   CancelAirdrop: 'CancelAirdrop',
+  InternalCallee: 'InternalCallee',
 };
 
 const CALL_EXCEPTION = 'CALL_EXCEPTION';
