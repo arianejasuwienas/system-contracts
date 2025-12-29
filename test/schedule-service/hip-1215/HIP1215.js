@@ -1,15 +1,13 @@
 // SPDX-License-Identifier: Apache-2.0
 
-const {expect} = require('chai');
+const { expect } = require('chai');
 const hre = require('hardhat');
-const {ethers} = hre;
+const { ethers } = hre;
 const Constants = require('../../constants');
 const Utils = require('../../token-service/utils.js');
 const axios = require("axios");
 
-const {
-  PrivateKey
-} = require('@hashgraph/sdk');
+const { PrivateKey } = require('@hashgraph/sdk');
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
@@ -22,7 +20,7 @@ const getScheduleInfoFromMN = async (scheduleAddress) => {
 const FIVE_MINUTES_AS_SECONDS = 300n;
 
 // disable the tests in CI until a new version of the local node with the latest CN is released
-describe.only("HIP1215 Test Suite", function () {
+describe("HIP1215 Test Suite", function () {
   let internalCalleeContract;
   let HRC1215Contract;
   let signers;

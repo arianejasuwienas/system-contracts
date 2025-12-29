@@ -1021,9 +1021,9 @@ class Utils {
       tx.setAdminKey(adminPrivateKey.publicKey);
     }
 
-    const {scheduleId} = await (await tx.execute(client)).getReceipt(client);
+    const { scheduleId } = await (await tx.execute(client)).getReceipt(client);
 
-    return {scheduleId, transferAmountAsWeibar};
+    return { scheduleId, transferAmountAsWeibar };
   };
 
   /**
